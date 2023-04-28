@@ -1,0 +1,50 @@
+<head>
+ 
+    {# Cargamos la librería #} 
+    {% load bootstrap4 %} 
+  
+    {# CSS Bootstrap #} 
+    {% bootstrap_css %} </head>
+  
+    {# Archivos #}
+    {% load static %} <!-- STATIC_URL -->
+  
+  </head>
+  
+  <body>
+    
+    {% include 'navbar.html'%}    
+
+
+    <div class="container mt-4">
+      <div class="row">
+          <div class="col-md-12">
+              <h1>Productos</h1>
+          </div>
+      </div>
+
+      <div class="row mt-4">
+          {% for producto in productos %}
+              <div class="col-md-4">
+                  <div class="card mb-4">
+                      <img class="card-img-top" src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+                      <div class="card-body">
+                          <h5 class="card-title">{{ producto.nombre }}</h5>
+                          <p class="card-text">{{ producto.descripcion }}</p>
+                          <p class="card-text">Precio: {{ producto.precio }}</p>
+                          <p class="card-text">Stock: {{ producto.stock }}</p>
+                          <a href="#" class="btn btn-primary">Comprar</a>
+                      </div>
+                  </div>
+              </div>
+          {% empty %}
+              <div class="col-md-12">
+                  <p>No hay productos disponibles.</p>
+              </div>
+          {% endfor %}
+      </div>
+  </div>
+    
+    {# JS y jQuery Bootstrap #}
+    {% bootstrap_javascript jquery='full' %} 
+  </body>

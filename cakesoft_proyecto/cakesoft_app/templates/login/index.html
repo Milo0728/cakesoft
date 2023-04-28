@@ -1,0 +1,37 @@
+<head>
+ 
+    {# Cargamos la librería #} 
+    {% load bootstrap4 %} 
+  
+    {# CSS Bootstrap #} 
+    {% bootstrap_css %} </head>
+  
+    {# Archivos #}
+    {% load static %} <!-- STATIC_URL -->
+  
+  </head>
+  
+  <body>
+    
+    {% include 'navbar.html'%}    
+
+    <div class="container my-5">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <h1 class="text-center mb-4">Iniciar sesión</h1>
+            <form method="post">
+              {% csrf_token %}
+              <div class="form-group">
+                <label for="username">Cedula:</label>
+                <input type="text" name="username" id="username" class="form-control" required>
+              </div>
+              <button type="submit" class="btn btn-primary btn-block mt-4">Iniciar sesión</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    
+    {# JS y jQuery Bootstrap #}
+    {% bootstrap_javascript jquery='full' %} 
+  </body>

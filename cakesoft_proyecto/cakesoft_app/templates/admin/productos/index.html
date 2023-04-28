@@ -1,0 +1,64 @@
+<head>
+ 
+    {# Cargamos la librería #} 
+    {% load bootstrap4 %} 
+  
+    {# CSS Bootstrap #} 
+    {% bootstrap_css %} </head>
+  
+    {# Archivos #}
+    {% load static %} <!-- STATIC_URL -->
+  
+  </head>
+  
+  <body>
+    
+    <div class="container mt-4">
+      <div class="row justify-content-between align-items-center">
+        <div class="col-md-6">
+          <h1>Pasteles</h1>
+        </div>
+        <div class="col-md-2">
+          <a href="crear" class="btn btn-primary float-right">Agregar</a>
+        </div>
+      </div>
+      <hr>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Descripción</th>
+            <th scope="col">Precio</th>
+            <th scope="col">Stock</th>
+            <th scope="col">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for producto in productos %}
+            <tr>
+              <th scope="row">{{ producto.id }}</th>
+              <td>{{ producto.nombre }}</td>
+              <td>{{ producto.descripcion }}</td>
+              <td>{{ producto.precio }}</td>
+              <td>{{ producto.stock }}</td>
+              <td>
+                <a href="{% url 'detalle_producto' producto.id %}" class="btn btn-sm btn-outline-primary">Detalles</a>
+                <a href="{% url 'editar_producto' producto.id %}" class="btn btn-sm btn-outline-secondary">Editar</a>
+                <form action="{% url 'eliminar_producto' producto.id %}" method="post" class="d-inline">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este producto?')">Eliminar</button>
+                </form>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="6">No hay productos disponibles.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {# JS y jQuery Bootstrap #}
+    {% bootstrap_javascript jquery='full' %} 
+  </body>
