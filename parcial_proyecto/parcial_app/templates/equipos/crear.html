@@ -1,0 +1,51 @@
+<head>
+ 
+    {# Cargamos la librería #} 
+    {% load bootstrap4 %} 
+  
+    {# CSS Bootstrap #} 
+    {% bootstrap_css %} 
+  
+    {# Widget Tweaks #}
+    {% load widget_tweaks %}
+  
+    {# Archivos #}
+    {% load static %} <!-- STATIC_URL -->
+  
+  </head>
+  <body>
+  
+    <div class="container mt-4">
+        <div class="card shadow">
+          <div class="card-body">
+            <h1 class="card-title text-center">
+              Crear equipo
+            </h1>
+            <form method="post" enctype="multipart/form-data">
+                
+                <!-- Pasamos el 'csrf_token' de seguridad para poder crear un nuevo registro -->
+                {% csrf_token %}
+                
+                <!-- {{ form.as_p }} -->
+                <div class="form-group">
+                    <label for="nombre" class="txt_negrita">Nombre</label>
+                    {{ form.nombre|add_class:"form-control" }} <!-- Usamos la librería 'widget_tweaks' para crear esta caja de texto -->
+                </div>
+                <div class="form-group">
+                    <label for="entrenador" class="txt_negrita">Entrenador</label>
+                    {{ form.entrenador|add_class:"form-control" }} <!-- Usamos la librería 'widget_tweaks' para crear esta caja de texto --> 
+                </div>
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary mr-2">Aceptar</button>
+                  <a href="./" type="submit" class="btn btn-secondary">Cancelar</a>
+                </div>
+                
+            </form>
+          </div>
+        </div>
+      </div>
+      
+    {# JS y jQuery Bootstrap #}
+    {% bootstrap_javascript jquery='full' %} 
+  
+  </body>
