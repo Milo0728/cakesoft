@@ -1,0 +1,77 @@
+<head>
+
+  {# Cargamos la librería #}
+  {% load bootstrap4 %}
+
+  {# CSS Bootstrap #}
+  {% bootstrap_css %} </head>
+
+{# Archivos #}
+{% load static %} <!-- STATIC_URL -->
+
+</head>
+
+<body>
+
+  {% include 'shared/navbar-admin.html'%}
+
+  <div class="container">
+    <a class="btn btn-block btn-lg btn-info" href="{% url 'administrar' %}">Volver</a>
+  </div>
+
+
+  <div class="container">
+
+    <table class="mt-2 table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Tipo Documento</th>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>Correo</th>
+          <th>Numero</th>
+          <th>Rol</th>
+          <th>Dirección</th>
+          <th>Fecha Nacimiento</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for clientes in object_list %}
+        <tr>
+          <td>{{ clientes.tipo_documento }}</td>
+          <td>{{ clientes.id }}</td>
+          <td>{{ clientes.nombre }}</td>
+          <td>{{ clientes.apellido }}</td>
+          <td>{{ clientes.correo }}</td>
+          <td>{{ clientes.numero }}</td>
+          <td>{{ clientes.rol }}</td>
+          <td>{{ clientes.direccion }}</td>
+          <td>{{ clientes.fecha_nacimiento }}</td>
+          <td>
+
+            <!-- Usaremos un formulario que realizará la tarea de eliminar un registro o postre desde la misma tabla HTML -->
+            <form method="POST" action="eliminarCliente/{{clientes.id}}">
+              {% csrf_token %}
+              <div class="btn-group">
+
+                <!-- Creamos 3 botones que son ver, Editar y Eliminar, nos sirven para gestionar nuestros registros o postres -->
+                <a href="{% url 'actualizarCliente' clientes.id %}" title="Editar" class="btn btn-primary">Editar</a>
+                <button class="btn btn-danger" onclick="return eliminar();" type="submit">
+                  Eliminar
+                </button>
+              </div>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+
+
+  {# JS y jQuery Bootstrap #}
+  {% bootstrap_javascript jquery='full' %}
+</body>

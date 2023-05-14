@@ -1,0 +1,95 @@
+<head>
+
+    {# Cargamos la librería #}
+    {% load bootstrap4 %}
+
+    {# CSS Bootstrap #}
+    {% bootstrap_css %}
+
+    {# Widget Tweaks #}
+    {% load widget_tweaks %}
+
+    {# Archivos #}
+    {% load static %} <!-- STATIC_URL -->
+
+</head>
+
+<body>
+
+    {% include 'shared/navbar-admin.html'%}
+
+    <div class="container mt-4 d-flex align-items-center justify-content-center">
+        <div class="card shadow w-50">
+            <div class="card-body">
+                <h1 class="card-title text-center">
+                    Actualizar Producto
+                </h1>
+                <form method="post" enctype="multipart/form-data">
+
+                    <!-- Pasamos el 'csrf_token' de seguridad para poder crear un nuevo registro -->
+                    {% csrf_token %}
+
+                    <!-- {{ form.as_p }} -->
+                    <div class="form-group">
+                        <label for="nombre_producto" class="txt_negrita">Nombre</label>
+                        {{ form.nombre_producto|add_class:"form-control" }}
+                        <!-- Usamos la librería 'widget_tweaks' para crear esta caja de texto -->
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcion" class="txt_negrita">Descripción</label>
+                        {{ form.descripcion|add_class:"form-control"|attr:"placeholder:Descripción"|attr:"rows:2" }}
+                        <!-- Usamos la librería 'widget_tweaks' para crear esta caja de texto -->
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="precio" class="txt_negrita">Precio</label>
+                                {{ form.precio|add_class:"form-control"|attr:"placeholder:Precio"|attr:"min:0" }}
+                                <!-- Usamos la librería 'widget_tweaks' para crear esta caja de texto -->
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="descuento" class="txt_negrita">Descuento</label>
+                                {{ form.descuento|add_class:"form-control"|attr:"placeholder:Descuento"|attr:"min:0" }}
+                                <!-- Usamos la librería 'widget_tweaks' para crear esta caja de texto -->
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="stock" class="txt_negrita">Cantidad</label>
+                                {{ form.stock|add_class:"form-control"|attr:"placeholder:Cantidad"|attr:"min:0" }}
+                                <!-- Usamos la librería 'widget_tweaks' para crear esta caja de texto -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="categoria" class="txt_negrita">Categoria</label>
+                        <select id="categoria" name="categoria" class="form-control">
+                          {% for categoria in categorias %}
+                            <option value="{{ categoria.id }}">{{ categoria.nombre_categoria }}</option>
+                          {% endfor %}
+                        </select>
+                    </div> 
+
+                    <div class="form-group">
+                        <label for="imagen" class="txt_negrita">Imagen</label>
+                        {{ form.imagen|add_class:"form-control"|attr:"placeholder:Imagen" }}
+                        <!-- Usamos la librería 'widget_tweaks' para crear esta caja de texto -->
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="./" type="submit" class="btn btn-danger w-50 mr-3">Cancelar</a>
+                        <button type="submit" class="btn btn-warning w-50">Actualizar</button>
+                    </div>                    
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {# JS y jQuery Bootstrap #}
+    {% bootstrap_javascript jquery='full' %}
+
+</body>

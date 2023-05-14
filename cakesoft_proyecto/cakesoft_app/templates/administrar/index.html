@@ -1,0 +1,40 @@
+<head>
+
+  {# Cargamos la librería #}
+  {% load bootstrap4 %}
+
+  {# CSS Bootstrap #}
+  {% bootstrap_css %} </head>
+
+{# Archivos #}
+{% load static %} <!-- STATIC_URL -->
+
+</head>
+
+<body class="m-0 vh-100 row justify-content-center align-items-center">
+
+
+  <div class="container w-50">
+    <div class="card shadow mb-4">
+      <div class="card-header py-3 text-center">
+        <h6 class="m-0 font-weight-bold text-danger">Zona Administración</h6>
+      </div>
+      <div class="card-body">
+        
+        <div class="row m-2">
+          <a href="{% url 'leerProducto' %}" class="btn btn-dark text-light btn-block">Administrar Productos</a>
+          <a href="{% url 'leerCliente' %}" class="btn btn-dark text-light btn-block">Administrar Clientes</a>
+          <a href="{% url 'leerCategoria' %}" class="btn btn-dark text-light btn-block">Administrar Categorias</a>
+          <a href="{% url 'leerProducto' %}" class="btn btn-dark text-light btn-block">Administrar Facturas</a>
+          <a href="{% url 'leerProducto' %}" class="btn btn-dark text-light btn-block">Administrar Ventas</a>
+          <a href="{% url 'inicio' %}" type="button" class="btn btn-danger text-light btn-block">Volver</a>
+
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# JS y jQuery Bootstrap #}
+  {% bootstrap_javascript jquery='full' %}
+</body>

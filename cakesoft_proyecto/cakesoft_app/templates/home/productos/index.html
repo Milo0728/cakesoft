@@ -1,0 +1,256 @@
+<head>
+    {# Cargamos la librería #}
+    {% load bootstrap4 %}
+
+    {# CSS Bootstrap #}
+    {% bootstrap_css %}
+
+    {% load static %}
+</head>
+
+<body>
+    {% include 'shared/navbar.html'%}
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Productos</h1>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            {% for producto in productos %}
+            <div class="col-md-4">
+                <div class="card mb-3 text-white bg-dark">
+                    <img class="card-img-top" src="{% static 'uploads/' %}{{ producto.imagen }}"
+                        alt="{{ producto.nombre_producto }}">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">{{ producto.nombre_producto }}</h5>
+                        <p class="card-text">{{ producto.descripcion }}</p>
+                        <div class="row text-center">
+                            <div class="col">
+                                <p class="card-text"><span style="font-weight: bold;">Precio: </span>${{producto.precio}}</p>
+                            </div>
+                            <div class="col">
+                                <p class="card-text"><span style="font-weight: bold;">Stock: </span>{{ producto.stock }}
+                                </p>
+                            </div>
+                        </div>
+                        <a href="#" class="btn btn-success btn-block mt-2 add-to-cart-btn"
+                            data-product-id="{{ producto.id }}" data-product-name="{{ producto.nombre_producto }}"
+                            data-product-price="{{ producto.precio }}"
+                            data-product-stock="{{ producto.stock }}">Comprar</a>
+                    </div>
+                </div>
+
+            </div>
+            {% empty %}
+            <div class="col-md-12">
+                <p>No hay productos disponibles.</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <h2>Carrito de Compras</h2>
+                <table id="cart-table" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Total</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Aquí se agregarán las filas de productos seleccionados -->
+                    </tbody>
+                </table>
+
+                <button id="generate-invoice-btn" class="btn btn-primary mb-3">Generar Factura</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS y jQuery Bootstrap -->
+    {% bootstrap_javascript jquery='full' %}
+
+    <script>
+        $(document).ready(function () {
+            var cartTable = $('#cart-table');
+
+            $('.add-to-cart-btn').on('click', function (e) {
+                e.preventDefault();
+
+                var productId = $(this).data('product-id');
+                var productName = $(this).data('product-name');
+                var productPrice = $(this).data('product-price');
+                var productStock = $(this).data('product-stock');
+
+                // Verificar si hay suficiente stock disponible
+                if (productStock <= 0) {
+                    alert('No hay suficiente stock disponible para este producto.');
+                    return;
+                }
+
+                // Verificar si el producto ya está en el carrito
+                var existingCartItem = cartTable.find('tbody tr[data-product-id="' + productId + '"]');
+                if (existingCartItem.length > 0) {
+                    var quantityInput = existingCartItem.find('.quantity-input');
+                    var quantity = parseInt(quantityInput.val());
+                    var newQuantity = quantity + 1;
+
+                    // Verificar si se excede el stock disponible
+                    if (newQuantity > productStock) {
+                        alert('No hay suficiente stock disponible para este producto.');
+                        return;
+                    }
+
+                    quantityInput.val(newQuantity);
+                } else {
+                    // Crear nueva fila para el producto en el carrito
+                    var cartItem = $('<tr data-product-id="' + productId + '">').append(
+                        $('<td>').text(productName),
+                        $('<td>').text('$' + productPrice),
+                        $('<td>').html('<input type="number" class="form-control quantity-input" min="1" max="' + productStock + '" value="1">'),
+                        $('<td>').text('$' + productPrice),
+                        $('<td>').html('<button class="btn btn-danger btn-sm remove-from-cart-btn">Eliminar</button>')
+                    );
+
+                    cartTable.find('tbody').append(cartItem);
+                }
+
+                // Actualizar el stock disponible
+                productStock -= 1;
+                $(this).data('product-stock', productStock);
+                $(this).closest('.card').find('.card-text:last').text('Stock: ' + productStock);
+
+                // Actualizar el subtotal y el total
+                calculateTotal();
+            });
+
+            // Actualizar el subtotal y el total cuando se modifique la cantidad
+            cartTable.on('change', '.quantity-input', function () {
+                var quantity = parseInt($(this).val());
+                var price = parseFloat($(this).closest('tr').find('td:nth-child(2)').text().replace('$', ''));
+                var total = quantity * price;
+                $(this).closest('tr').find('td:nth-child(4)').text('$' + total.toFixed(2));
+
+                calculateTotal();
+            });
+
+            // Eliminar un producto del carrito
+            cartTable.on('click', '.remove-from-cart-btn', function () {
+                var row = $(this).closest('tr');
+                var productId = row.data('product-id');
+                var productStock = $('.add-to-cart-btn[data-product-id="' + productId + '"]').data('product-stock');
+
+                // Actualizar el stock disponible
+                productStock += 1;
+                $('.add-to-cart-btn[data-product-id="' + productId + '"]').data('product-stock', productStock);
+                $(this).closest('.card').find('.card-text:last').text('Stock: ' + productStock);
+
+                row.remove();
+                calculateTotal();
+            });
+
+            // Calcular el total de la compra
+            function calculateTotal() {
+                var total = 0;
+                cartTable.find('tbody tr').each(function () {
+                    var quantity = parseInt
+                        ($(this).find('.quantity-input').val());
+                    var price = parseFloat($(this).find('td:nth-child(2)').text().replace('$', ''));
+                    var subtotal = quantity * price;
+                    total += subtotal;
+                });
+                $('#cart-total').text('$' + total.toFixed(2));
+            }
+
+            $('#generate-invoice-btn').on('click', function () {
+                if (cartTable.find('tbody tr').length === 0) {
+                    alert('No puedes generar una factura sin antes haber elegido un producto.');
+                    return;
+                }
+
+                var invoice = '<div class="container mt-4">' +
+                    '<div class="row">' +
+                    '<div class="col-md-12">' +
+                    '<h2>Factura</h2>' +
+                    '<table class="table table-bordered">' +
+                    '<thead>' +
+                    '<tr>' +
+                    '<th>Producto</th>' +
+                    '<th>Precio</th>' +
+                    '<th>Cantidad</th>' +
+                    '<th>Subtotal</th>' +
+                    '</tr>' +
+                    '</thead>' +
+                    '<tbody>';
+
+                var totalAmount = 0;
+
+                cartTable.find('tbody tr').each(function () {
+                    var productName = $(this).find('td:first-child').text();
+                    var price = parseFloat($(this).find('td:nth-child(2)').text().replace('$', ''));
+                    var quantity = parseInt($(this).find('.quantity-input').val());
+                    var subtotal = quantity * price;
+
+                    invoice += '<tr>' +
+                        '<td>' + productName + '</td>' +
+                        '<td>$' + price.toFixed(2) + '</td>' +
+                        '<td>' + quantity + '</td>' +
+                        '<td>$' + subtotal.toFixed(2) + '</td>' +
+                        '</tr>';
+
+                    totalAmount += subtotal;
+                });
+
+                invoice += '</tbody>' +
+                    '<tfoot>' +
+                    '<tr>' +
+                    '<td colspan="3" class="text-right"><strong>Total a pagar:</strong></td>' +
+                    '<td>$' + totalAmount.toFixed(2) + '</td>' +
+                    '</tr>' +
+                    '</tfoot>' +
+                    '</table>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>';
+
+                // Show invoice modal or alert
+                // Here, we will use a modal to display the invoice
+                $('#invoice-modal .modal-body').html(invoice);
+                $('#invoice-modal').modal('show');
+            });
+
+            // Redirect to the home page when the invoice modal is closed
+            $('#invoice-modal').on('hidden.bs.modal', function () {
+                window.location.href = '/';
+            });
+        });
+    </script>
+
+    <!-- Invoice Modal -->
+    <div id="invoice-modal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Factura Generada</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Invoice content will be dynamically inserted here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--End Invoice Modal-- >
+</body >

@@ -1,0 +1,64 @@
+<head>
+
+    {# Cargamos la librería #}
+    {% load bootstrap4 %}
+
+    {# CSS Bootstrap #}
+    {% bootstrap_css %}
+
+    {# Widget Tweaks #}
+    {% load widget_tweaks %}
+
+    {# Archivos #}
+    {% load static %} <!-- STATIC_URL -->
+
+</head>
+
+<body>
+
+    {% include 'shared/navbar-admin.html'%}
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Detalles</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card shadow h-100">
+                    <img src="{% static 'uploads/' %}{{ producto.imagen }}" alt="{{ producto.nombre_producto }}"
+                        class="card-img-top h-100">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card shadow h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Detalles del producto</h5>
+                        <p><strong>Categoria: </strong>{{object.categoria.nombre_categoria}}</p>
+                        <p><strong>Nombre: </strong>{{object.nombre_producto}}</p>
+                        <p><strong>Descripción: </strong>{{object.descripcion}}</p>
+                        <p><strong>Precio: </strong>{{object.precio}}</p>
+                        <p><strong>Descuento: </strong>{{object.descuento}}</p>
+                        <p><strong>Stock: </strong>{{object.stock}}</p>
+                        <a href="../" class="btn btn-info btn-block">Volver</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 
+    <h4>Detalles</h4>
+ 
+    <p><span class="txt_negrita">Categoria:</span> <br> {{object.categoria.nombre_categoria}}</p>
+    <p><span class="txt_negrita">Nombre:</span> <br> {{object.nombre_producto}}</p>
+    <p><span class="txt_negrita">Precio:</span> <br> {{object.precio}}</p> -->
+
+    <!-- Botón para volver a la vista principal (Home) -->
+
+
+    {# JS y jQuery Bootstrap #}
+    {% bootstrap_javascript jquery='full' %}
+</body>

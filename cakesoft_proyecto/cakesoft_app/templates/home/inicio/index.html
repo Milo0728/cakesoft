@@ -1,0 +1,32 @@
+<head>
+ 
+    {# Cargamos la librería #} 
+    {% load bootstrap4 %} 
+  
+    {# CSS Bootstrap #} 
+    {% bootstrap_css %} </head>
+  
+    {# Archivos #}
+    {% load static %} <!-- STATIC_URL -->
+  
+  </head>
+  
+  <body>
+
+    {% include 'shared/navbar.html'%}    
+    <main>
+        <div class="container">
+            <div class="d-flex align-items-center">
+                <div class="ml-4">
+                    <p>Bienvenid@ a <strong>PastelWow</strong>, una pastelería que brinda exquisitos pasteles para deleitar tu paladar. Utilizamos ingredientes de alta calidad y preparamos cada producto con amor y dedicación. Ofrecemos opciones para bodas, cumpleaños y cualquier evento especial. ¡Haz que tu día sea aún más dulce con PastelWow!</p>
+                </div>
+                <div>
+                    <img src="{% static 'uploads/cakesoft.png' %}" alt="logo cakesoft">
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    {# JS y jQuery Bootstrap #}
+    {% bootstrap_javascript jquery='full' %} 
+  </body>
